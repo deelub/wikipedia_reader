@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Wikipedia Flutter')),
-        body: const Center(child: Text('Loading...')),
+        body: const Center(child: Text('Check console for article data')),
       ),
     );
   }
@@ -54,7 +54,6 @@ class ArticleViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    notifyListeners();
     try {
       summary = await model.getRandomArticleSummary();
       print('Article loaded: ${summary!.titles.normalized}'); // Temporary
@@ -68,5 +67,26 @@ class ArticleViewModel extends ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+  }
+
+  
+}
+
+class ArticleView extends StatefulWidget {   //manage page layout
+  const ArticleView({super.key});
+
+  @override
+  State<ArticleView> createState() => _ArticleViewState();
+}
+
+class _ArticleViewState extends State<ArticleView> {
+  // The view model will be instantiated here next.
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Wikipedia Flutter')),
+      body: const Center(child: Text('Loading...')),
+    );
   }
 }
