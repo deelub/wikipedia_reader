@@ -65,7 +65,8 @@ class ArticleViewModel extends ChangeNotifier {
   }
 }
 
-class ArticleView extends StatefulWidget {  //extends changed notfier for state changes
+class ArticleView extends StatefulWidget {
+  //extends changed notfier for state changes
   //manage page layout
   const ArticleView({super.key});
 
@@ -76,7 +77,6 @@ class ArticleView extends StatefulWidget {  //extends changed notfier for state 
 class _ArticleViewState extends State<ArticleView> {
   final ArticleViewModel viewModel = ArticleViewModel(ArticleModel());
 
-  
   @override
   void initState() {
     super.initState();
@@ -85,14 +85,14 @@ class _ArticleViewState extends State<ArticleView> {
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(title: const Text('Wikipedia Flutter')),
       body: Center(
         child: ListenableBuilder(
           listenable: viewModel,
           builder: (context, _) {
             return switch ((
-              viewModel.isLoading,   //handle the widget display for either on of these options
+              viewModel.isLoading, //handle the widget display for either on of these options
               viewModel.summary,
               viewModel.error,
             )) {
@@ -111,7 +111,8 @@ class _ArticleViewState extends State<ArticleView> {
   }
 }
 
-class ArticlePage extends StatelessWidget {  //Class to display the article content
+class ArticlePage extends StatelessWidget {
+  //Class to display the article content
   const ArticlePage({
     super.key,
     required this.summary,
@@ -123,11 +124,47 @@ class ArticlePage extends StatelessWidget {  //Class to display the article cont
 
   @override
   Widget build(BuildContext context) {
-   return const SingleChildScrollView(
+    return SingleChildScrollView(
       child: Column(
-        children: [Text('Article content will be displayed here...')],
+        children: [
+          ArticleWidget(summary: summary),
+          ElevatedButton(
+            onPressed: nextArticleCallback,
+            child: const Text('Next random article'),
+          ),
+        ],
       ),
     );
   }
 }
 
+class ArticleWidget extends StatelessWidget {
+  const ArticleWidget({super.key, required this.summary});
+
+  final Summary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        spacing: 10,
+        children: [
+          if (summary.hasImage) Image.network(summary.originalImage!.source),
+          Text(       //text styling for the article title, description and extract
+            summary.titles.normalized,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+          if (summary.description != null)
+            Text(
+              summary.description!,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          Text(summary.extract),
+        ],
+      ),
+    );
+  }
+}
