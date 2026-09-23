@@ -92,7 +92,7 @@ class _ArticleViewState extends State<ArticleView> {
           listenable: viewModel,
           builder: (context, _) {
             return switch ((
-              viewModel.isLoading,
+              viewModel.isLoading,   //handle the widget display for either on of these options
               viewModel.summary,
               viewModel.error,
             )) {
@@ -110,3 +110,24 @@ class _ArticleViewState extends State<ArticleView> {
     );
   }
 }
+
+class ArticlePage extends StatelessWidget {  //Class to display the article content
+  const ArticlePage({
+    super.key,
+    required this.summary,
+    required this.nextArticleCallback,
+  });
+
+  final Summary summary;
+  final VoidCallback nextArticleCallback;
+
+  @override
+  Widget build(BuildContext context) {
+   return const SingleChildScrollView(
+      child: Column(
+        children: [Text('Article content will be displayed here...')],
+      ),
+    );
+  }
+}
+
