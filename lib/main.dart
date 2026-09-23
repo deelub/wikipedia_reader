@@ -32,12 +32,9 @@ class ArticleModel {
     );
     final response = await get(uri);
 
-    
     if (response.statusCode != 200) {
       throw const HttpException('Failed to update resource');
     }
-
-
 
     if (response.statusCode != 200) {
       throw const HttpException('Failed to update resource');
@@ -49,8 +46,24 @@ class ArticleViewModel extends ChangeNotifier {
   final ArticleModel model;
   Summary? summary;
   Exception? error;
-  bool isLoading = false;
+  bool isLoading = false; //progress indicator
 
   ArticleViewModel(this.model);
-}
 
+  Future<void> fetchArticle() async {
+    isLoading = true;
+    notifyListeners();
+
+    notifyListeners();
+    try {
+      summary = await model.getRandomArticleSummary();
+      error = null; // Clear any previous errors.
+    } on HttpException catch (e) {
+      error = e;
+      summary = null;
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+}
