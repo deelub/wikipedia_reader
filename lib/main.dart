@@ -17,12 +17,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = ArticleViewModel(ArticleModel());
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Wikipedia Flutter')),
-        body: const Center(child: Text('Check console for article data')),
-      ),
-    );
+    return MaterialApp(home: ArticleView());
   }
 }
 
@@ -68,11 +63,10 @@ class ArticleViewModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
-
-  
 }
 
-class ArticleView extends StatefulWidget {   //manage page layout
+class ArticleView extends StatefulWidget {  //extends changed notfier for state changes
+  //manage page layout
   const ArticleView({super.key});
 
   @override
@@ -80,13 +74,25 @@ class ArticleView extends StatefulWidget {   //manage page layout
 }
 
 class _ArticleViewState extends State<ArticleView> {
-  // The view model will be instantiated here next.
+  final ArticleViewModel viewModel = ArticleViewModel(ArticleModel());
+
+  
+  @override
+  void initState() {
+    super.initState();
+    viewModel.fetchArticle();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Wikipedia Flutter')),
-      body: const Center(child: Text('Loading...')),
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, child) {
+          return const Center(child: Text('Loading...'));
+        },
+      ),
     );
   }
 }
